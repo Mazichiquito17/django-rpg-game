@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>⚔️ Batalla Épica ⚔️</title>
+
+    <style>
+        body {
+            background: black;
+            color: white;
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            color: red;
+            font-size: 42px;
+            text-shadow: 0 0 20px red;
+            margin-bottom: 30px;
+        }
+
+        .hp-bar {
+            width: 60%;
+            height: 25px;
+            background: #400;
+            border: 2px solid red;
+            margin: 10px auto;
+            border-radius: 10px;
+        }
+
+        .hp-fill {
+            height: 100%;
+            background: crimson;
+            width: 100%;
+            transition: 0.3s;
+            border-radius: 8px;
+        }
+
+        .action-btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: darkred;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>⚔️ {{ character_name }} vs {{ enemy_name }} ⚔️</h1>
+
+    <h2>Vida del jugador</h2>
+    <div class="hp-bar">
+        <div class="hp-fill" data-width="{{ player_hp }}"></div>
+    </div>
+    <p>{{ player_hp }} HP</p>
+
+    <h2>Vida del enemigo</h2>
+    <div class="hp-bar">
+        <div class="hp-fill" data-width="{{ enemy_hp }}"></div>
+    </div>
+    <p>{{ enemy_hp }} HP</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button name="action" value="attack" class="action-btn">Atacar</button>
+        <button name="action" value="special" class="action-btn">Ataque Especial</button>
+        <button name="action" value="defend" class="action-btn">Defender</button>
+    </form>
+
+</body>
+<script>
+document.querySelectorAll('.hp-fill').forEach(bar => {
+    const width = bar.getAttribute('data-width');
+    bar.style.width = width + "%";
+});
+</script>
+
+</html>
+

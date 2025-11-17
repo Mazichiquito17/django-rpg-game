@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lore del Héroe</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Crimson+Pro:wght@400;600&display=swap');
+
+        body {
+            background-color: #000;
+            color: #ddd;
+            font-family: 'Crimson Pro', serif;
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #b40f0f;
+            font-size: 3rem;
+            text-shadow: 0 0 25px #8b0000;
+            margin-bottom: 30px;
+        }
+
+        .hero-img {
+            width: 320px;
+            border: 2px solid #550000;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(139,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        #lore-text {
+            width: 60%;
+            margin: auto;
+            font-size: 1.3rem;
+            line-height: 1.7;
+            min-height: 150px;
+            white-space: pre-line;
+        }
+
+        .button-container {
+            margin-top: 40px;
+        }
+
+        .battle-btn {
+            background-color: #550000;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .battle-btn:hover {
+            background-color: #b40f0f;
+            box-shadow: 0 0 20px #b40f0f;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Historia de {{ character_name }}</h1>
+
+    <!-- Imagen del héroe -->
+    {% if character_type == "warrior" %}
+        <img src="{% static 'imagenes/guerrero.png' %}" class="hero-img">
+    {% elif character_type == "mage" %}
+        <img src="{% static 'imagenes/mago.png' %}" class="hero-img">
+    {% elif character_type == "rogue" %}
+        <img src="{% static 'imagenes/arquero.png' %}" class="hero-img">
+    {% endif %}
+
+    <!-- Texto que se va escribiendo -->
+    <div id="lore-text"></div>
+
+    <div class="button-container">
+        <form action="/batalla/">
+            <button class="battle-btn">⚔️ Comenzar la Batalla</button>
+        </form>
+    </div>
+
+    <script>
+        // --- TEXTOS del LORE --- //
+        const lores = {
+            "warrior": `
+Aatrox, la Espada Darkin…
+
+Un antiguo semidiós que alguna vez lideró ejércitos celestiales.
+Caído en desgracia, su cuerpo se convirtió en prisión de un poder prohibido.
+
+Ahora vaga por el mundo, sediento de guerra,
+jurando destruir todo rastro de fragilidad mortal.
+
+Su motivación… {{ motivation }}.
+            `,
+
+            "mage": `
+Veigar, el Maestro del Vacío…
+
+Un ser pequeño en tamaño pero inmenso en ambición.
+En su búsqueda de conocimiento prohibido, abrió portales que ningún mortal debía tocar.
+
+Las energías del Vacío deformaron su alma,
+convirtiéndolo en un portador del caos arcano.
+
+Su motivación… {{ motivation }}.
+            `,
+
+            "rogue": `
+Varus, el Arquero Oscuro…
+
+Antaño un guerrero noble,
+hasta que su pueblo fue masacrado y su espíritu se quebró.
+
+En su dolor, liberó una entidad oscura sellada en un antiguo templo,
+fusionándose con ella para obtener poder inimaginable.
+
+Su motivación… {{ motivation }}.
+            `
+        };
+
+        // Elegimos el lore correcto
+        const text = lores["{{ character_type }}"];
+
+        // --- EFECTO TYPEWRITER --- //
+        let i = 0;
+        const speed = 45; // velocidad de escritura (ms)
+
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("lore-text").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        typeWriter();
+    </script>
+
+</body>
+</html>

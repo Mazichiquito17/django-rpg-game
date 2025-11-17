@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Listo para la batalla</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Crimson+Pro:wght@400;600&display=swap');
+    body{
+      background:#0a0a0a;
+      color:#ddd;
+      font-family:'Crimson Pro', serif;
+      text-align:center;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:30px;
+    }
+    .card{
+      background:rgba(20,20,20,.85);
+      border:2px solid #550000;
+      border-radius:12px;
+      padding:30px 40px;
+      box-shadow:0 0 35px rgba(139,0,0,.5);
+      max-width:700px;
+    }
+    h1{
+      font-family:'Cinzel Decorative', serif;
+      color:#e50914;
+      text-shadow:0 0 15px #8b0000;
+      margin:0 0 10px;
+      font-size:2rem;
+    }
+    .mot{margin:8px 0 16px; color:#ccc;}
+    img{
+      width:360px;
+      border-radius:10px;
+      border:2px solid #550000;
+      box-shadow:0 0 25px rgba(200,0,0,.4);
+      margin:15px 0 10px;
+    }
+    .lore{font-style:italic; color:#bbb; margin-bottom:12px;}
+    a.btn{
+      display:inline-block;
+      margin-top:12px;
+      padding:10px 14px;
+      border:2px solid #e50914;
+      border-radius:8px;
+      color:#fff;
+      text-decoration:none;
+      background:#b40f0f;
+      transition:.2s;
+    }
+    a.btn:hover{ background:#e50914; transform:scale(1.03); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>{{ character.name }} está listo para la batalla</h1>
+    <div class="mot">Motivación: <strong>{{ motivacion }}</strong></div>
+
+    {% if character_type == "warrior" %}
+      <img src="{% static 'imagenes/guerrero.png' %}" alt="Aatrox">
+    {% elif character_type == "mage" %}
+      <img src="{% static 'imagenes/mago.png' %}" alt="Veigar">
+    {% elif character_type == "rogue" %}
+      <img src="{% static 'imagenes/arquero.png' %}" alt="Varus">
+    {% endif %}
+
+    <div class="lore">{{ character.lore }}</div>
+    <div>Fuerza: {{ character.strength }} | Magia: {{ character.magic }}</div>
+
+    <div>
+      <a class="btn" href="/vestuario/">Volver al vestuario</a>
+      <a class="btn" href="/">Forjar otro héroe</a>
+      <!-- Más adelante: /combate/ -->
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Vestuario del Héroe</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Crimson+Pro:wght@400;600&display=swap');
+
+        body {
+            background-color: #000;
+            color: #ddd;
+            font-family: 'Crimson Pro', serif;
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #b40f0f;
+            font-size: 3rem;
+            text-shadow: 0 0 20px #8b0000;
+            margin-bottom: 20px;
+        }
+
+        .hero-img {
+            width: 350px;
+            border: 2px solid #550000;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 25px rgba(139,0,0,0.5);
+        }
+
+        select {
+            padding: 10px;
+            background-color: #111;
+            color: #fff;
+            border: 2px solid #550000;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .battle-btn {
+            background-color: #550000;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .battle-btn:hover {
+            background-color: #b40f0f;
+            box-shadow: 0 0 20px #b40f0f;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Vestuario del Héroe</h1>
+
+    <!-- Imagen del héroe -->
+    {% if character_type == "warrior" %}
+        <img src="{% static 'imagenes/guerrero.png' %}" class="hero-img" alt="Aatrox">
+    {% elif character_type == "mage" %}
+        <img src="{% static 'imagenes/mago.png' %}" class="hero-img" alt="Veigar">
+    {% elif character_type == "rogue" %}
+        <img src="{% static 'imagenes/arquero.png' %}" class="hero-img" alt="Varus">
+    {% endif %}
+
+    <h2>{{ character_name }} está listo para su destino…</h2>
+    <p>Elige su motivación para la batalla:</p>
+
+    <!-- FORMULARIO DE MOTIVACIÓN -->
+    <form method="post">
+        {% csrf_token %}
+
+        <select name="motivation">
+            <option value="Venganza">Venganza</option>
+            <option value="Honor">Honor</option>
+            <option value="Gloria">Gloria</option>
+            <option value="Sabiduría">Sabiduría</option>
+        </select>
+
+        <div class="button-row">
+
+            <!-- Botón de confirmar -->
+            <button type="submit" class="battle-btn">Confirmar motivación</button>
+
+            <!-- Botón de continuar solo si hay motivación guardada -->
+            {% if request.session.motivation %}
+                <a href="/lore/" class="battle-btn">Continuar</a>
+            {% endif %}
+
+        </div>
+    </form>
+
+</body>
+</html>

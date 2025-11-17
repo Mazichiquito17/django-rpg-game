@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Selección de Héroe</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Crimson+Pro:wght@400;600&display=swap');
+
+        body {
+            background-color: #050505;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,1)),
+                              url("{% static 'imagenes/fondo.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            color: #ddd;
+            font-family: 'Crimson Pro', serif;
+            text-align: center;
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            color: #b40f0f;
+            font-size: 4rem;
+            text-shadow: 0 0 25px #8b0000, 0 0 40px #400000;
+            margin-bottom: 40px;
+        }
+
+        .heroes-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-card {
+            background-color: rgba(20,20,20,0.75);
+            border: 2px solid #550000;
+            border-radius: 12px;
+            width: 300px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #fff;
+            box-shadow: 0 0 25px rgba(139,0,0,0.4);
+        }
+
+        .hero-card:hover {
+            transform: scale(1.08);
+            border-color: #e50914;
+            box-shadow: 0 0 40px rgba(200,0,0,0.6);
+        }
+
+        .hero-card img {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid #550000;
+            margin-bottom: 15px;
+        }
+
+        .hero-name {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.8rem;
+            color: #e50914;
+        }
+
+        .hero-lore {
+            font-style: italic;
+            color: #ccc;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>🔥 Selección de Héroe 🔥</h1>
+
+    <div class="heroes-container">
+
+        <!-- Guerrero -->
+        <a href="/?character_type=warrior" class="hero-card">
+            <img src="{% static 'imagenes/guerrero.png' %}" alt="Aatrox">
+            <div class="hero-name">Aatrox</div>
+            <div class="hero-lore">Un demonio caído consumido por la guerra eterna.</div>
+        </a>
+
+        <!-- Mago -->
+        <a href="/?character_type=mage" class="hero-card">
+            <img src="{% static 'imagenes/mago.png' %}" alt="Veigar">
+            <div class="hero-name">Veigar</div>
+            <div class="hero-lore">El maestro del vacío, obsesionado con el poder arcano.</div>
+        </a>
+
+        <!-- Arquero -->
+        <a href="/?character_type=rogue" class="hero-card">
+            <img src="{% static 'imagenes/arquero.png' %}" alt="Varus">
+            <div class="hero-name">Varus</div>
+            <div class="hero-lore">Un arquero vengativo atrapado entre luz y oscuridad.</div>
+        </a>
+
+    </div>
+
+</body>
+</html>
