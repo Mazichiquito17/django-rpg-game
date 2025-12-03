@@ -10,138 +10,104 @@
 
         body {
             background-color: #000;
-            color: #ddd;
-            font-family: 'Crimson Pro', serif;
+            color: #fff;
             text-align: center;
-            padding: 40px;
+            font-family: 'Crimson Pro', serif;
+            padding: 0;
+            margin: 0;
         }
 
         h1 {
             font-family: 'Cinzel Decorative', serif;
+            font-size: 4rem;
             color: #b40f0f;
-            font-size: 3rem;
-            text-shadow: 0 0 25px #8b0000;
-            margin-bottom: 30px;
-        }
-
-        .hero-img {
-            width: 320px;
-            border: 2px solid #550000;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(139,0,0,0.5);
-            margin-bottom: 30px;
-        }
-
-        #lore-text {
-            width: 60%;
-            margin: auto;
-            font-size: 1.3rem;
-            line-height: 1.7;
-            min-height: 150px;
-            white-space: pre-line;
-        }
-
-        .button-container {
             margin-top: 40px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 25px #900;
         }
 
-        .battle-btn {
-            background-color: #550000;
-            padding: 15px 40px;
-            border: none;
+        .skin-img {
+            width: 380px;
+            max-width: 95%;
+            display: block;
+            margin: 0 auto 30px auto;
             border-radius: 10px;
-            color: #fff;
-            font-family: 'Cinzel Decorative', serif;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: 0.3s;
+            border: 3px solid #600;
+            box-shadow: 0px 0px 25px rgba(255,0,0,0.35);
         }
 
-        .battle-btn:hover {
-            background-color: #b40f0f;
-            box-shadow: 0 0 20px #b40f0f;
+        .lore-container {
+            width: 80%;
+            max-width: 950px;
+            margin: 0 auto;
+            font-size: 1.25rem;
+            margin-top: 10px;
+        }
+
+        /* Texto revelándose */
+        .lore-line {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeMove 1.4s ease-out forwards;
+            margin-bottom: 18px;
+            line-height: 1.8rem;
+        }
+
+        .lore-line:nth-child(n) {
+            animation-delay: calc(0.6s * var(--i));
+        }
+
+        @keyframes fadeMove {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-battle {
+            margin-top: 40px;
+            padding: 14px 38px;
+            background-color: #700;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-family: 'Cinzel Decorative', serif;
+            border-radius: 10px;
+            font-size: 1.4rem;
+            transition: .3s;
+            display: inline-block;
+            opacity: 0;
+        }
+
+        .btn-battle.show {
+            animation: fadeMove 1.6s ease-out forwards;
+            animation-delay: 2s;
+        }
+
+        .btn-battle:hover {
+            background-color: #b00;
+            box-shadow: 0px 0px 18px #b00;
         }
     </style>
+
 </head>
 <body>
 
-    <h1>Historia de {{ character_name }}</h1>
+    <h1>{{ character_name }}</h1>
 
-    <!-- Imagen del héroe -->
-    {% if character_type == "warrior" %}
-        <img src="{% static 'imagenes/guerrero.png' %}" class="hero-img">
-    {% elif character_type == "mage" %}
-        <img src="{% static 'imagenes/mago.png' %}" class="hero-img">
-    {% elif character_type == "rogue" %}
-        <img src="{% static 'imagenes/arquero.png' %}" class="hero-img">
-    {% endif %}
+    <img src="{{ skin_image }}" class="skin-img" alt="Skin del héroe">
 
-    <!-- Texto que se va escribiendo -->
-    <div id="lore-text"></div>
-
-    <div class="button-container">
-        <form action="/batalla/">
-            <button class="battle-btn">⚔️ Comenzar la Batalla</button>
-        </form>
+    <div class="lore-container">
+        {% for line in lore_lines %}
+            <p class="lore-line" style="--i: {{ forloop.counter }}">{{ line }}</p>
+        {% endfor %}
     </div>
 
-    <script>
-        // --- TEXTOS del LORE --- //
-        const lores = {
-            "warrior": `
-Aatrox, la Espada Darkin…
+    <a href="/batalla/" id="btnBattle" class="btn-battle">Continuar a la Batalla</a>
 
-Un antiguo semidiós que alguna vez lideró ejércitos celestiales.
-Caído en desgracia, su cuerpo se convirtió en prisión de un poder prohibido.
-
-Ahora vaga por el mundo, sediento de guerra,
-jurando destruir todo rastro de fragilidad mortal.
-
-Su motivación… {{ motivation }}.
-            `,
-
-            "mage": `
-Veigar, el Maestro del Vacío…
-
-Un ser pequeño en tamaño pero inmenso en ambición.
-En su búsqueda de conocimiento prohibido, abrió portales que ningún mortal debía tocar.
-
-Las energías del Vacío deformaron su alma,
-convirtiéndolo en un portador del caos arcano.
-
-Su motivación… {{ motivation }}.
-            `,
-
-            "rogue": `
-Varus, el Arquero Oscuro…
-
-Antaño un guerrero noble,
-hasta que su pueblo fue masacrado y su espíritu se quebró.
-
-En su dolor, liberó una entidad oscura sellada en un antiguo templo,
-fusionándose con ella para obtener poder inimaginable.
-
-Su motivación… {{ motivation }}.
-            `
-        };
-
-        // Elegimos el lore correcto
-        const text = lores["{{ character_type }}"];
-
-        // --- EFECTO TYPEWRITER --- //
-        let i = 0;
-        const speed = 45; // velocidad de escritura (ms)
-
-        function typeWriter() {
-            if (i < text.length) {
-                document.getElementById("lore-text").innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
-            }
-        }
-
-        typeWriter();
-    </script>
-
+<script>
+    const lines = parseInt("{{ lore_lines|length|default:'0' }}");
+    setTimeout(() => {
+        document.getElementById("btnBattle").classList.add("show");
+    }, (lines * 600) + 1400);
+</script>
 </body>
 </html>

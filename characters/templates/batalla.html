@@ -1,88 +1,384 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>⚔️ Batalla Épica ⚔️</title>
+    <title>Batalla Final</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
+
         body {
-            background: black;
-            color: white;
-            font-family: 'Cinzel', serif;
-            text-align: center;
-            padding: 30px;
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #1c1c2b 0, #050509 55%, #000 100%);
+            color: #e5e5e5;
+            font-family: 'Crimson Pro', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
 
         h1 {
-            color: red;
-            font-size: 42px;
-            text-shadow: 0 0 20px red;
-            margin-bottom: 30px;
+            font-family: 'Cinzel', serif;
+            color: #e53935;
+            text-shadow: 0 0 20px #b71c1c;
+            margin-bottom: 10px;
+            font-size: 2.8rem;
+        }
+
+        .subtitle {
+            opacity: .8;
+            margin-bottom: 25px;
+        }
+
+        .arena {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 90%;
+            max-width: 1100px;
+            margin-bottom: 25px;
+        }
+
+        .fighter-card {
+            background: linear-gradient(145deg, rgba(10,10,20,.95), rgba(30,0,0,.9));
+            border-radius: 18px;
+            padding: 18px;
+            border: 2px solid rgba(229,57,53,.5);
+            box-shadow: 0 0 25px rgba(229,57,53,.4);
+            position: relative;
+        }
+
+        .fighter-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .tag-player {
+            font-size: .8rem;
+            color: #8bc34a;
+        }
+        .tag-enemy {
+            font-size: .8rem;
+            color: #ff5252;
+        }
+
+        .hp-bar-container {
+            background: #111;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+            margin-bottom: 4px;
         }
 
         .hp-bar {
-            width: 60%;
-            height: 25px;
-            background: #400;
-            border: 2px solid red;
-            margin: 10px auto;
+            height: 16px;
+            background: linear-gradient(90deg, #4caf50, #cddc39);
+            transition: width .4s ease-out;
+        }
+
+        .hp-bar.enemy {
+            background: linear-gradient(90deg, #ff5722, #ffeb3b);
+        }
+
+        .hp-text {
+            font-size: .9rem;
+            text-align: right;
+            opacity: .8;
+            margin-bottom: 4px;
+        }
+
+        .energy-bar-container {
+            background: #050810;
             border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #283593;
+            margin-bottom: 4px;
         }
 
-        .hp-fill {
-            height: 100%;
-            background: crimson;
-            width: 100%;
-            transition: 0.3s;
-            border-radius: 8px;
+        .energy-bar {
+            height: 10px;
+            background: linear-gradient(90deg, #00e5ff, #7c4dff);
+            transition: width .4s ease-out;
         }
 
-        .action-btn {
-            margin-top: 20px;
-            padding: 12px 25px;
-            background: darkred;
-            color: white;
-            border: none;
-            border-radius: 8px;
+        .energy-bar.enemy {
+            background: linear-gradient(90deg, #ffab00, #ff6f00);
+        }
+
+        .sprite-wrapper {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .sprite {
+            width: 220px;
+            filter: drop-shadow(0 0 25px rgba(255,0,0,.4));
+        }
+        .sprite.enemy {
+            transform: scaleX(-1);
+            filter: drop-shadow(0 0 25px rgba(0,255,255,.4));
+        }
+
+        .battle-panel {
+            width: 90%;
+            max-width: 1100px;
+            background: rgba(5,5,10,.95);
+            border-radius: 18px;
+            border: 2px solid #311b92;
+            box-shadow: 0 0 30px rgba(103,58,183,.5);
+            padding: 18px 20px 25px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 15px;
+        }
+
+        .btn-action {
+            padding: 10px 24px;
+            border-radius: 999px;
+            border: 1px solid #673ab7;
+            background: radial-gradient(circle, #4527a0, #12005e);
+            color: #fff;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
             cursor: pointer;
+            transition: .2s;
         }
 
-        .action-btn:hover {
-            background: red;
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 22px rgba(156,39,176,.9);
         }
+
+        .btn-action.defend {
+            background: radial-gradient(circle, #263238, #000);
+            border-color: #455a64;
+        }
+
+        .log {
+            background: #050509;
+            border-radius: 12px;
+            border: 1px solid #311b92;
+            padding: 14px;
+            min-height: 70px;
+            font-size: .95rem;
+            text-align: left;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .log span.crit {
+            color: #ffeb3b;
+            text-shadow: 0 0 10px #ffc107;
+        }
+
+        .result-banner {
+            margin-top: 18px;
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        /* Overlay Soulslike */
+        .overlay {
+            position: fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background:rgba(0,0,0,.90);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family:'Cinzel', serif;
+            font-size:4rem;
+            letter-spacing:.25rem;
+            text-transform:uppercase;
+            opacity:0;
+            pointer-events:none;
+            transition:opacity 1.8s ease-in-out;
+            z-index:999;
+        }
+        .overlay.show {
+            opacity:1;
+            pointer-events:all;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            20% { transform: translate(10px, -5px); }
+            40% { transform: translate(-10px, 8px); }
+            60% { transform: translate(8px, -10px); }
+            80% { transform: translate(-8px, 6px); }
+        }
+        .shake { animation: shake 0.5s ease; }
+        .glitch {
+            filter: blur(2px) contrast(180%) brightness(140%) saturate(200%);
+        }
+
     </style>
 </head>
-
 <body>
 
-    <h1>⚔️ {{ character_name }} vs {{ enemy_name }} ⚔️</h1>
+<div id="overlay" class="overlay"></div>
 
-    <h2>Vida del jugador</h2>
-    <div class="hp-bar">
-        <div class="hp-fill" data-width="{{ player_hp }}"></div>
+<h1>Batalla Final</h1>
+<div class="subtitle">
+    {{ character_name }} enfrenta a {{ enemy_name }}…
+</div>
+
+<div class="arena">
+
+    <!-- JUGADOR -->
+    <div class="fighter-card">
+
+        <div class="fighter-name">
+            {{ character_name }}
+            <span class="tag-player">[TÚ]</span>
+        </div>
+
+        {% if character_type == "warrior" %}
+            {% widthratio player_hp 120 100 as player_hp_percent %}
+        {% elif character_type == "mage" %}
+            {% widthratio player_hp 100 100 as player_hp_percent %}
+        {% else %}
+            {% widthratio player_hp 90 100 as player_hp_percent %}
+        {% endif %}
+
+        <div class="hp-bar-container">
+            <div class="hp-bar" style="width: {{ player_hp_percent }}%;"></div>
+        </div>
+
+        <div class="hp-text">HP: {{ player_hp }}</div>
+
+        <div class="energy-bar-container">
+            <div class="energy-bar" style="width: {{ player_energy }}%;"></div>
+        </div>
+        <div class="energy-text">Energía: {{ player_energy }}</div>
+
+        <div class="sprite-wrapper">
+            <img src="{% static 'imagenes/' %}{{ player_sprite }}" class="sprite">
+        </div>
+
     </div>
-    <p>{{ player_hp }} HP</p>
 
-    <h2>Vida del enemigo</h2>
-    <div class="hp-bar">
-        <div class="hp-fill" data-width="{{ enemy_hp }}"></div>
+    <!-- ENEMIGO -->
+    <div class="fighter-card">
+
+        <div class="fighter-name">
+            {{ enemy_name }}
+            <span class="tag-enemy">[ENEMIGO]</span>
+        </div>
+
+        {% widthratio enemy_hp 95 100 as enemy_hp_percent %}
+        <div class="hp-bar-container">
+            <div class="hp-bar enemy" style="width: {{ enemy_hp_percent }}%;"></div>
+        </div>
+
+        <div class="hp-text">HP: {{ enemy_hp }}</div>
+
+        <div class="energy-bar-container">
+            <div class="energy-bar enemy" style="width: {{ enemy_energy }}%;"></div>
+        </div>
+        <div class="energy-text">Energía: {{ enemy_energy }}</div>
+
+        <div class="sprite-wrapper">
+            <img src="{% static 'imagenes/' %}{{ enemy_sprite }}" class="sprite enemy">
+        </div>
+
     </div>
-    <p>{{ enemy_hp }} HP</p>
 
-    <form method="POST">
-        {% csrf_token %}
-        <button name="action" value="attack" class="action-btn">Atacar</button>
-        <button name="action" value="special" class="action-btn">Ataque Especial</button>
-        <button name="action" value="defend" class="action-btn">Defender</button>
-    </form>
+</div>
 
-</body>
+<div class="battle-panel">
+
+    <div class="status-row">
+        <div>Turno actual: <strong>{{ character_name }}</strong></div>
+    </div>
+
+    {% if not finished %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="actions">
+                <button type="submit" name="action" value="attack" class="btn-action">Ataque Normal</button>
+                <button type="submit" name="action" value="special" class="btn-action">Habilidad Especial</button>
+                <button type="submit" name="action" value="defend" class="btn-action defend">Defender</button>
+            </div>
+        </form>
+    {% endif %}
+
+    <div class="log">
+        {% if battle_text %}
+            {{ battle_text|safe }}
+        {% else %}
+            <em>El silencio pesa sobre los condenados…</em>
+        {% endif %}
+    </div>
+
+    {% if finished %}
+        <div class="result-banner">
+            {{ result }}
+        </div>
+
+        <form method="GET">
+            <button type="submit" class="btn-action" style="margin-top:15px;">
+                Reintentar
+            </button>
+        </form>
+
+        <a href="{% url 'create_character' %}" class="btn-action" style="background:#4a0a0a; margin-top:12px;">
+            Elegir otro destino
+        </a>
+
+    {% endif %}
+</div>
+
 <script>
-document.querySelectorAll('.hp-fill').forEach(bar => {
-    const width = bar.getAttribute('data-width');
-    bar.style.width = width + "%";
-});
+    if ("{{ finished }}" == "True") {
+    const overlay = document.getElementById("overlay");
+    if (overlay) {
+        const playerWins = {{ enemy_hp }} <= 0;
+        overlay.textContent = playerWins ? "GLORIA EN LAS CENIZAS" : "EL ABISMO TE HA RECLAMADO";
+
+        // Mostrar overlay después del fade
+        setTimeout(() => overlay.classList.add("show"), 1100);
+
+        // Quitar overlay a los 3 segundos
+        setTimeout(() => {
+            overlay.classList.remove("show");
+        }, 4100);
+    }
+}
+
+    // Efectos críticos
+    const logBox = document.querySelector(".log");
+
+    if (logBox && logBox.innerHTML.includes("CRÍTICO")) {
+        const arena = document.querySelector(".arena");
+        const enemySprite = document.querySelector(".sprite.enemy");
+
+        if (arena) {
+            arena.classList.add("shake");
+            setTimeout(() => arena.classList.remove("shake"), 600);
+        }
+
+        if (enemySprite) {
+            enemySprite.classList.add("glitch");
+            setTimeout(() => enemySprite.classList.remove("glitch"), 600);
+        }
+    }
+
 </script>
 
+</body>
 </html>
 
+
+{% load static %}
